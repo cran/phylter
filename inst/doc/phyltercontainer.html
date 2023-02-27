@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Damien de Vienne" />
+
+<meta name="date" content="2023-02-27" />
+
+<title>2-PhylteR in a container</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">2-PhylteR in a container</h1>
+<h4 class="author">Damien de Vienne</h4>
+<h4 class="date">2023-02-27</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#phylter-in-a-container"><span class="toc-section-number">1</span> PhylteR in a container</a>
+<ul>
+<li><a href="#run-phylter-with-docker"><span class="toc-section-number">1.1</span> Run PhylteR with Docker</a></li>
+<li><a href="#run-phylter-with-singularity"><span class="toc-section-number">1.2</span> Run PhylteR with Singularity</a></li>
+</ul></li>
+<li><a href="#references"><span class="toc-section-number">2</span> References</a></li>
+</ul>
+</div>
+
+<div id="phylter-in-a-container" class="section level1" number="1">
+<h1 number="1"><span class="header-section-number">1</span> PhylteR in a container</h1>
+<p>In addition to the R package <strong>phylter</strong> available on CRAN (<a href="https://CRAN.R-project.org/package=phylter" class="uri">https://CRAN.R-project.org/package=phylter</a>) and on GitHub (<a href="https://github.com/damiendevienne/phylter" class="uri">https://github.com/damiendevienne/phylter</a>), <em>containerized</em> versions of <strong>phylter</strong> (docker and singularity) are also proposed.</p>
+<p>This may ease the use of <strong>phylter</strong> on some computing infrastructures (clusters) or for users reluctant to the R language.</p>
+<p>The containers host python3 scrips allowing to easily run <strong>phylter</strong> with the same options than with the R package, but also perform additional tasks such as removing (pruning) outliers from input trees and/or filtering out outlier sequences from (aligned) sequence files (fasta format).</p>
+<p>Using <strong>phylter</strong> from the container simply consists in running the <code>phylter.py</code> function, specifying various options such as the directory containing the gene trees (with -t), the job name (with -j), etc.</p>
+<p>The containers also contain a toy dataset of 255 Carnivora genes trees and alignments from Allio et al. (2021) that will allow you to test both the correct installation of the container(s), and the use of the <code>phylter.py</code> function and its options.</p>
+<div id="run-phylter-with-docker" class="section level2" number="1.1">
+<h2 number="1.1"><span class="header-section-number">1.1</span> Run PhylteR with Docker</h2>
+<p>PhylteR is available as a <a href="https://docs.docker.com/">Docker</a> container: <a href="https://hub.docker.com/r/treecoutheo/phylter_docker" class="uri">https://hub.docker.com/r/treecoutheo/phylter_docker</a>.</p>
+<p>Here are the steps needed to use the docker version of <strong>phylter</strong>:</p>
+<blockquote>
+<p>Warning: you may need administrator rights to use docker!</p>
+</blockquote>
+<ol style="list-style-type: decimal">
+<li>Pull the latest version of <strong>phylter</strong> container from the Docker Hub repository:</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">sudo</span> docker pull treecoutheo/phylter_docker:latest</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Run <strong>phylter</strong> on the example Carnivora dataset</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker phylter.py -j Carnivora_docker -t /usr/container-data/trees</span></code></pre></div>
+<ul>
+<li><code>$PWD</code> specifies that you work in your local <strong>P</strong>resent <strong>W</strong>orking <strong>D</strong>irectory. This should not be changed.</li>
+<li><code>-j</code> specifies the job name for this <strong>phylter</strong> run (and thus the name of the output folder)</li>
+<li><code>-t</code> specifies the folder containing the input gene trees in Newick format (one tree per file)</li>
+</ul>
+<p>The command above creates the directory <code>Carnivora_docker</code> that will contain:</p>
+<ul>
+<li><code>PhylteR_all_tree_named</code>: a single file containing all the trees with the gene ID preceding the newick.</li>
+<li><code>phylter.out</code>: the phylter output file containing the log of the run and the list of identified outliers.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Run <strong>phylter</strong> on the example Carnivora dataset AND prune trees AND remove outliers from fasta files</li>
+</ol>
+<p>You may want to run <strong>phylter</strong> and to subsequently remove the identified outliers from both the gene trees and the sequences files. For this to be performed, the sequence files must contain the same name as the corresponding tree, minus the extension if any. For example, a sequence file named <code>ENSG00000274286_ADRA2B_final_align_NT.aln</code> will be matched automatically to a tree file named <code>ENSG00000274286_ADRA2B.treefile</code>: <code>phylter.py</code> will identify the gene ID as being <strong>ENSG00000274286_ADRA2B</strong>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker phylter.py -j Carnivora_docker -t /usr/container-data/trees -p TRUE -s /usr/container-data/alignments -g TRUE</span></code></pre></div>
+<ul>
+<li><code>-p TRUE</code> specifies that the input trees should be pruned by removing the outliers identified by <strong>phylter</strong>. A new directorry containing the pruned trees is created (see after).</li>
+<li><code>-s</code> specifies the directory containing the sequences (see above for specifications regarding naming conventions). If this directory is specified, the input sequences will be filtered by removing the outliers identified by <strong>phylter</strong>. A new directorry containing the filtered sequences is created (see after).</li>
+<li><code>-g TRUE</code> specifies that a full report (in pdf) should be produced (in addition to the default <code>phylter.out</code> file).</li>
+</ul>
+<p>The command above generates, in addition to the two files described in the previous example:</p>
+<ul>
+<li><p><code>Carnivora_docker/trees_PhylteR/</code>: a directory containing the trees pruned from their outliers. Note that the number of trees inside the directory can be lower than the number of trees used as input in case all species from a gene tree have been identified as outliers.</p></li>
+<li><p><code>Carnivora_docker/seqs_PhylteR/</code>: a directory containing sequences with outlier sequences filtered out. The number of sequences files inside the directory can be lower than the number of sequences files used as input. Again, the number of sequence files inside the directory can be lower than the number of trees sequence files in the input directory in case all species from a gene tree have been identified as outliers.</p></li>
+<li><p><code>report.pdf</code>: a PDF report containing a summary of the results.</p></li>
+</ul>
+<ol start="4" style="list-style-type: decimal">
+<li>Prune trees and filter out sequences AFTER the <strong>phylter</strong> run.</li>
+</ol>
+<p>Instead of performing the <strong>phylter</strong> analysis and the filtering of outliers at the same time, you can do it in multiple steps. here is how, on the example dataset:</p>
+<ul>
+<li>Run phylter:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker phylter.py -j Carnivora_docker -t /usr/container-data/trees</span></code></pre></div>
+<p>The output file <code>phylter.out</code> will be used for performing the pruning and/or the sequence filtering (see below).</p>
+<ul>
+<li>Prune trees with <code>prune_tree_outliers.R</code>:</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker prune_tree_outliers.R container-data_phylter /usr/container-data/trees Carnivora_docker/phylter.out</span></code></pre></div>
+<ul>
+<li>Filter alignments with <code>remove_sequence_outliers.py</code>:</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker remove_sequence_outliers.py -j container-data_phylter -s /usr/container-data/alignments -o Carnivora_docker/phylter.out</span></code></pre></div>
+<ol start="5" style="list-style-type: decimal">
+<li>View all <strong>phylter</strong> options</li>
+</ol>
+<p><code>phylter.py</code> allows specifying all the options available in the R package. To see this list of options, simply use the <code>-h</code> option:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="fu">sudo</span> docker run -v <span class="va">$PWD</span>:<span class="va">$PWD</span> -w <span class="va">$PWD</span> treecoutheo/phylter_docker phylter.py -h</span></code></pre></div>
+</div>
+<div id="run-phylter-with-singularity" class="section level2" number="1.2">
+<h2 number="1.2"><span class="header-section-number">1.2</span> Run PhylteR with Singularity</h2>
+<p>PhylteR is also available as a <a href="https://docs.sylabs.io/guides/3.0/user-guide/index.html">singularity</a> container : (<a href="https://cloud.sylabs.io/library/theo.treecou/tool/phylter_singularity" class="uri">https://cloud.sylabs.io/library/theo.treecou/tool/phylter_singularity</a>). Here are instructions to install (or build) and run it:</p>
+<ol style="list-style-type: decimal">
+<li>Pull the latest version of <strong>phylter</strong> container from the Sylabs repository:</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">sudo</span> singularity pull PhylteR.sif library://theo.treecou/tool/phylter_singularity:latest</span></code></pre></div>
+<p>Alternatively, you can build a singularity image from the Docker Hub repository:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="fu">sudo</span> singularity pull PhylteR.sif docker://treecoutheo/phylter_docker:latest</span></code></pre></div>
+<ol start="2" style="list-style-type: decimal">
+<li>Run <strong>phylter</strong> on the carnivora example dataset:</li>
+</ol>
+<div class="sourceCode" id="cb10"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ex">singularity</span> exec -B <span class="va">$PWD</span> PhylteR.sif phylter.py -j Carnivora_singularity -t /usr/container-data/trees</span></code></pre></div>
+<ol start="3" style="list-style-type: decimal">
+<li>More options Please, refer to the description of the docker container to see how to use all the options available with the <code>phylter.py</code> function.</li>
+</ol>
+</div>
+</div>
+<div id="references" class="section level1" number="2">
+<h1 number="2"><span class="header-section-number">2</span> References</h1>
+<ul>
+<li>Allio, R., Tilak, M.K., Scornavacca, C., Avenant, N.L., Kitchener, A.C., Corre, E., Nabholz, B. &amp; Delsuc, F. (2021). <em>High-quality carnivoran genomes from roadkill samples enable comparative species delineation in aardwolf and bat-eared fox</em>. eLife, 10, e63167. doi: 10.7554/eLife.63167.</li>
+</ul>
+<hr />
+<p>For comments, suggestions and bug reports, please open an <a href="https://github.com/damiendevienne/phylter/issues">issue</a> on this GitHub repository.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
