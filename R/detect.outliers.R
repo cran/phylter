@@ -33,13 +33,12 @@
 #' # Get the initial gene x species matrix
 #' # from the carnivora dataset
 #' data(carnivora) 
-#' mat<-phylter(carnivora, InitialOnly=TRUE)$WR
+#' mat <- phylter(carnivora, InitialOnly = TRUE, parallel = FALSE)$WR
 #' 
 #' # detect outliers in this matrix
 #' outliers<-detect.outliers(mat)
 #' outliers$cells # matrix where each row represents one cell in the input matrix
 #' 
-#' @importFrom mrfDepth medcouple
 #' @importFrom stats dist quantile IQR
 #' @export
 detect.outliers <- function(X, k = 3, test.island=TRUE, normalizeby="row") {

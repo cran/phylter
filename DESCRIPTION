@@ -1,9 +1,10 @@
 Package: phylter
 Title: Detect and Remove Outliers in Phylogenomics Datasets
-Version: 0.9.7
-Imports: ape, ggplot2, mrfDepth, reshape2, Rfast, RSpectra, stats,
-        utils
+Version: 0.9.11
+Imports: ape, ggplot2, reshape2, Rfast, RSpectra, stats, utils
 Suggests: knitr, rmarkdown
+LinkingTo: RcppEigen (>= 0.3.2.9.0), Rcpp (>= 0.12.6), RcppArmadillo
+        (>= 0.7.600.1.0)
 Authors@R: c(
     person("Damien M.", "de Vienne", role = "aut", email = "damien.de-vienne@univ-lyon1.fr"),
     person("Stéphane", "Dray", role = "aut", email = "stephane.dray@univ-lyon1.fr"),
@@ -18,14 +19,14 @@ LazyData: true
 Depends: R (>= 4.0)
 BugReports: https://github.com/damiendevienne/phylter/issues
 Encoding: UTF-8
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
-NeedsCompilation: no
-Packaged: 2023-02-27 09:39:01 UTC; siberchicot
+NeedsCompilation: yes
+Packaged: 2023-08-24 08:05:20 UTC; siberchicot
 Author: Damien M. de Vienne [aut],
   Stéphane Dray [aut],
   Théo Tricou [aut],
   Aurélie Siberchicot [aut, cre]
 Maintainer: Aurélie Siberchicot <aurelie.siberchicot@univ-lyon1.fr>
 Repository: CRAN
-Date/Publication: 2023-02-27 10:12:31 UTC
+Date/Publication: 2023-08-24 08:20:03 UTC

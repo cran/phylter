@@ -10,8 +10,8 @@
 #' in this gene tree and (ii) the average position of this species in all other gene trees.
 #' @examples
 #' data(carnivora)
-#' matrices<-phylter(carnivora, InitialOnly=TRUE)$matrices
-#' ds<-DistatisFast(matrices)
+#' matrices<-phylter(carnivora, InitialOnly=TRUE, parallel=FALSE)$matrices
+#' ds<-DistatisFast(matrices, parallel = FALSE)
 #' WR<-Dist2WR(ds) #returns the gene x species matrix
 #' 
 #' @export

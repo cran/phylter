@@ -57,7 +57,7 @@ require(ape)
 
 ## ---- results='hide'----------------------------------------------------------
 data(carnivora, package = "phylter")
-results <- phylter(carnivora) # for example
+results <- phylter(carnivora, parallel = FALSE) # for example
 
 ## -----------------------------------------------------------------------------
 summary(results)
