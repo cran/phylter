@@ -12,7 +12,7 @@
 
 <meta name="author" content="Damien de Vienne" />
 
-<meta name="date" content="2025-07-29" />
+<meta name="date" content="2026-11-03" />
 
 <title>1-Use of phylter</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">1-Use of phylter</h1>
 <h4 class="author">Damien de Vienne</h4>
-<h4 class="date">2025-07-29</h4>
+<h4 class="date">2026-11-03</h4>
 
 
 <div id="TOC">
@@ -376,21 +376,13 @@ quality score of the compromise matrix</a></li>
 
 <div id="installation" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Installation</h1>
-<p><strong><code>phylter</code></strong> is not yet on CRAN (deposit in
-process). To install the development version:</p>
-<ol style="list-style-type: decimal">
-<li>Install the release version of <code>remotes</code> from CRAN:</li>
-</ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span></code></pre></div>
-<ol start="2" style="list-style-type: decimal">
-<li>Install the development version of <code>phylter</code> from
-GitHub:</li>
-</ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;damiendevienne/phylter&quot;</span>)</span></code></pre></div>
-<ol start="3" style="list-style-type: decimal">
-<li>Once installed, the package can be loaded:</li>
-</ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;phylter&quot;</span>)</span></code></pre></div>
+<p>To install the stable version of <code>phylter</code> from CRAN:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;phylter&quot;</span>)</span></code></pre></div>
+<p>To install the development version of <code>phylter</code> from
+GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">&quot;damiendevienne/phylter&quot;</span>)</span></code></pre></div>
+<p>Once installed, the package can be loaded:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">require</span>(<span class="st">&quot;phylter&quot;</span>)</span></code></pre></div>
 <p>Note that <code>phylter</code> requires R version &gt; 4.0, otherwise
 it cannot be installed. Also, R uses the GNU Scientific Library. On
 Ubuntu, this can be installed prior to the installation of the

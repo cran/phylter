@@ -3,15 +3,6 @@ require(phylter)
 require(ape)
 
 ## ----eval = FALSE-------------------------------------------------------------
-# install.packages("remotes")
-
-## ----eval = FALSE-------------------------------------------------------------
-# remotes::install_github("damiendevienne/phylter")
-
-## ----eval = FALSE-------------------------------------------------------------
-# library("phylter")
-
-## ----eval = FALSE-------------------------------------------------------------
 # if (!requireNamespace("ape", quietly = TRUE))
 #    install.packages("ape")
 # trees <- ape::read.tree("treefile.tre")
